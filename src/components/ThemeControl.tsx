@@ -1,49 +1,58 @@
-import { useEffect, useState } from "react";
-import { Palette, Sun, Moon } from "lucide-react";
-import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
+import { useEffect, useState } from 'react'
+import { Palette, Sun, Moon } from 'lucide-react'
+import { Popover, PopoverTrigger, PopoverContent } from './ui/popover'
 
-type Theme = "dark" | "light";
+type Tema = 'dark' | 'light'
 
-const PALETTES: { id: string; label: string; hue: number }[] = [
-  { id: "purple", label: "Roxo", hue: 300 },
-  { id: "cyan", label: "Cyan", hue: 200 },
-  { id: "blue", label: "Azul", hue: 255 },
-  { id: "matrix", label: "Matrix", hue: 155 },
-  { id: "amber", label: "Âmbar", hue: 75 },
-  { id: "pink", label: "Rosa", hue: 350 },
-  { id: "red", label: "Vermelho", hue: 25 },
-];
+interface Paleta {
+  id: string
+  label: string
+  hue: number
+}
 
-export function ThemeControl() {
-  const [theme, setTheme] = useState<Theme>("dark");
-  const [palette, setPalette] = useState("purple");
+// O `hue` repete de propósito o valor que styles.css declara em
+// [data-palette]: o CSS ainda não trocou enquanto o usuário só olha as
+// opções, então a bolinha precisa da cor à mão pra mostrar o que vem.
+const PALETAS: Paleta[] = [
+  { id: 'purple', label: 'Roxo', hue: 300 },
+  { id: 'cyan', label: 'Cyan', hue: 200 },
+  { id: 'blue', label: 'Azul', hue: 255 },
+  { id: 'matrix', label: 'Matrix', hue: 155 },
+  { id: 'amber', label: 'Âmbar', hue: 75 },
+  { id: 'pink', label: 'Rosa', hue: 350 },
+  { id: 'red', label: 'Vermelho', hue: 25 },
+]
 
-  // sincroniza com o que o script inline já aplicou no <html>
+export default function ThemeControl() {
+  const [tema, setTema] = useState<Tema>('dark')
+  const [paleta, setPaleta] = useState('purple')
+
+  // Lê do <html>, não do localStorage: o script inline do __root já resolveu
+  // a escolha antes da hidratação, e ler da mesma fonte garante que o botão
+  // concorda com o que a página está mostrando.
   useEffect(() => {
-    const el = document.documentElement;
-    const t = (el.getAttribute("data-theme") as Theme) || "dark";
-    const p = el.getAttribute("data-palette") || "purple";
-    setTheme(t);
-    setPalette(p);
-  }, []);
+    const el = document.documentElement
+    setTema((el.getAttribute('data-theme') as Tema) || 'dark')
+    setPaleta(el.getAttribute('data-palette') || 'purple')
+  }, [])
 
-  function applyTheme(t: Theme) {
-    setTheme(t);
-    document.documentElement.setAttribute("data-theme", t);
+  const aplicarTema = (t: Tema) => {
+    setTema(t)
+    document.documentElement.setAttribute('data-theme', t)
     try {
-      localStorage.setItem("dp-theme", t);
+      localStorage.setItem('dp-theme', t)
     } catch {
-      /* ignora storage indisponível */
+      /* storage indisponível — a escolha vale só nesta sessão */
     }
   }
 
-  function applyPalette(p: string) {
-    setPalette(p);
-    document.documentElement.setAttribute("data-palette", p);
+  const aplicarPaleta = (p: string) => {
+    setPaleta(p)
+    document.documentElement.setAttribute('data-palette', p)
     try {
-      localStorage.setItem("dp-palette", p);
+      localStorage.setItem('dp-palette', p)
     } catch {
-      /* ignora storage indisponível */
+      /* storage indisponível — a escolha vale só nesta sessão */
     }
   }
 
@@ -53,54 +62,46 @@ export function ThemeControl() {
         <button
           aria-label="Aparência"
           title="Aparência"
-          className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          className="w-8 h-8 flex items-center justify-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
         >
           <Palette size={16} />
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-60 rounded-2xl border-border bg-card p-4">
+      <PopoverContent align="end" className="w-60 p-4 rounded-2xl border-border bg-card">
         <div className="space-y-4">
           <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            <p className="mb-2 text-xs font-medium text-muted-foreground tracking-widest uppercase">
               Tema
             </p>
             <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => applyTheme("dark")}
-                className={`flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
-                  theme === "dark"
-                    ? "border-primary/40 bg-secondary text-foreground"
-                    : "border-border text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Moon size={15} /> Escuro
-              </button>
-              <button
-                onClick={() => applyTheme("light")}
-                className={`flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
-                  theme === "light"
-                    ? "border-primary/40 bg-secondary text-foreground"
-                    : "border-border text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Sun size={15} /> Claro
-              </button>
+              <BotaoTema
+                ativo={tema === 'dark'}
+                onClick={() => aplicarTema('dark')}
+                icon={<Moon size={15} />}
+                label="Escuro"
+              />
+              <BotaoTema
+                ativo={tema === 'light'}
+                onClick={() => aplicarTema('light')}
+                icon={<Sun size={15} />}
+                label="Claro"
+              />
             </div>
           </div>
 
           <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            <p className="mb-2 text-xs font-medium text-muted-foreground tracking-widest uppercase">
               Cor de destaque
             </p>
             <div className="flex flex-wrap gap-2.5">
-              {PALETTES.map((p) => (
+              {PALETAS.map(p => (
                 <button
                   key={p.id}
-                  onClick={() => applyPalette(p.id)}
+                  onClick={() => aplicarPaleta(p.id)}
                   aria-label={p.label}
                   title={p.label}
-                  className={`h-8 w-8 rounded-full border-2 transition-transform hover:scale-110 ${
-                    palette === p.id ? "border-foreground" : "border-transparent"
+                  className={`w-8 h-8 rounded-full border-2 hover:scale-110 transition-transform ${
+                    paleta === p.id ? 'border-foreground' : 'border-transparent'
                   }`}
                   style={{ backgroundColor: `oklch(0.62 0.17 ${p.hue})` }}
                 />
@@ -110,5 +111,30 @@ export function ThemeControl() {
         </div>
       </PopoverContent>
     </Popover>
-  );
+  )
+}
+
+function BotaoTema({
+  ativo,
+  onClick,
+  icon,
+  label,
+}: {
+  ativo: boolean
+  onClick: () => void
+  icon: React.ReactNode
+  label: string
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-3 py-2 rounded-lg border flex items-center justify-center gap-2 text-sm transition-colors ${
+        ativo
+          ? 'border-primary/40 bg-secondary text-foreground'
+          : 'border-border text-muted-foreground hover:text-foreground'
+      }`}
+    >
+      {icon} {label}
+    </button>
+  )
 }

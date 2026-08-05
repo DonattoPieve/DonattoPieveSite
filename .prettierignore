@@ -6,3 +6,8 @@ pnpm-lock.yaml
 package-lock.json
 bun.lock
 routeTree.gen.ts
+
+# O tema é uma tabela: as paletas ficam uma por linha, alinhadas, pra dar pra
+# comparar os matizes de olho. O prettier quebra cada regra em 3 linhas e
+# desmancha a tabela — a legibilidade aqui vale mais que a formatação automática.
+src/styles.css
