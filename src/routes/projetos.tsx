@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink, Github } from "lucide-react";
+import { useLang } from "../lib/i18n";
 
 export const Route = createFileRoute("/projetos")({
   head: () => ({
@@ -15,65 +16,61 @@ export const Route = createFileRoute("/projetos")({
   component: Projetos,
 });
 
-type Projeto = {
-  titulo: string;
-  descricao: string;
-  tags: string[];
-  github: string | null;
-  demo: string | null;
-  soon?: boolean;
-};
-
-const projetos: Projeto[] = [
-  {
-    titulo: "Athena",
-    descricao:
-      "Segundo cérebro acadêmico: notas do INATEL viram wiki técnica publicada na web, por um comando — com grafo, busca e diamante 3D.",
-    tags: ["Next.js", "Three.js", "Claude Code"],
-    github: null,
-    demo: "https://athena-yuuta.vercel.app",
-  },
-  {
-    titulo: "Cronos",
-    descricao:
-      "Irmão do Athena: ingest automático via GitHub Actions. Você marca a nota como pronta, o resto roda sozinho.",
-    tags: ["GitHub Actions", "Automação"],
-    github: "https://github.com/DonattoPieve/CRONOS",
-    demo: null,
-  },
-  {
-    titulo: "Mais no GitHub",
-    descricao:
-      "Estudos, protótipos e experimentos — código aberto e sempre crescendo.",
-    tags: ["Open source"],
-    github: "https://github.com/DonattoPieve",
-    demo: null,
-  },
-  {
-    titulo: "Finanças",
-    descricao:
-      "Organizador de finanças pessoais pra ajudar na rotina — próximo projeto do ecossistema.",
-    tags: ["Em breve"],
-    github: null,
-    demo: null,
-    soon: true,
-  },
-];
-
 function Projetos() {
+  const { t } = useLang();
+
+  type Projeto = {
+    titulo: string;
+    descricao: string;
+    tags: string[];
+    github: string | null;
+    demo: string | null;
+    soon?: boolean;
+  };
+
+  const projetos: Projeto[] = [
+    {
+      titulo: "Athena",
+      descricao: t("proj.athena.desc"),
+      tags: ["Next.js", "Three.js", "Claude Code"],
+      github: null,
+      demo: "https://athena-yuuta.vercel.app",
+    },
+    {
+      titulo: "Cronos",
+      descricao: t("proj.cronos.desc"),
+      tags: [t("proj.tag.automacao"), "GitHub Actions"],
+      github: "https://github.com/DonattoPieve/CRONOS",
+      demo: null,
+    },
+    {
+      titulo: t("proj.github.title"),
+      descricao: t("proj.github.desc"),
+      tags: [t("proj.tag.open")],
+      github: "https://github.com/DonattoPieve",
+      demo: null,
+    },
+    {
+      titulo: t("proj.financas.title"),
+      descricao: t("proj.financas.desc"),
+      tags: [t("proj.tag.soon")],
+      github: null,
+      demo: null,
+      soon: true,
+    },
+  ];
+
   return (
     <div className="mx-auto max-w-6xl px-6 pt-40 pb-24">
       <section>
         <p className="mb-4 text-sm font-medium uppercase tracking-widest text-muted-foreground">
-          Projetos
+          {t("proj.eyebrow")}
         </p>
         <h1 className="mb-6 text-4xl font-bold leading-tight text-foreground md:text-5xl">
-          Trabalhos e <span className="text-gradient">experimentos</span>.
+          {t("proj.h1.pre")}
+          <span className="text-gradient">{t("proj.h1.grad")}</span>.
         </h1>
-        <p className="mb-12 max-w-2xl text-lg text-muted-foreground">
-          Uma seleção dos projetos que construí — a maioria nasceu de um problema meu que virou
-          ferramenta.
-        </p>
+        <p className="mb-12 max-w-2xl text-lg text-muted-foreground">{t("proj.lead")}</p>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projetos.map((projeto) => (
@@ -117,11 +114,11 @@ function Projetos() {
                     className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                   >
                     <ExternalLink size={16} />
-                    <span>Ver ao vivo</span>
+                    <span>{t("proj.btn.live")}</span>
                   </a>
                 )}
                 {!projeto.github && !projeto.demo && (
-                  <span className="text-sm text-muted-foreground">Em desenvolvimento</span>
+                  <span className="text-sm text-muted-foreground">{t("proj.btn.dev")}</span>
                 )}
               </div>
             </article>

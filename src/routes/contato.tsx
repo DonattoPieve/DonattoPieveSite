@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Linkedin, Instagram, Mail, Github } from "lucide-react";
+import { useLang } from "../lib/i18n";
 
 export const Route = createFileRoute("/contato")({
   head: () => ({
@@ -16,78 +17,45 @@ export const Route = createFileRoute("/contato")({
 });
 
 function Contato() {
+  const { t } = useLang();
+
+  const canais = [
+    { icon: <Mail size={24} />, title: "Email", sub: "donattocampos@outlook.com", href: "mailto:donattocampos@outlook.com" },
+    { icon: <Linkedin size={24} />, title: "LinkedIn", sub: "/in/donatto-pieve", href: "https://www.linkedin.com/in/donatto-pieve/" },
+    { icon: <Instagram size={24} />, title: "Instagram", sub: "@donatto0608", href: "https://instagram.com/donatto0608" },
+    { icon: <Github size={24} />, title: "GitHub", sub: "/DonattoPieve", href: "https://github.com/DonattoPieve" },
+  ];
+
   return (
     <div className="mx-auto max-w-4xl px-6 pt-40 pb-24">
       <section>
         <p className="mb-4 text-sm font-medium uppercase tracking-widest text-muted-foreground">
-          Contato
+          {t("contato.eyebrow")}
         </p>
         <h1 className="mb-6 text-4xl font-bold leading-tight text-foreground md:text-5xl">
-          Vamos <span className="text-gradient">conversar</span>.
+          {t("contato.h1.pre")}
+          <span className="text-gradient">{t("contato.h1.grad")}</span>.
         </h1>
-        <p className="mb-12 max-w-2xl text-lg text-muted-foreground">
-          Aberto a estágios, projetos e uma boa ideia. Respondo rápido — manda por onde for mais
-          fácil. Santa Rita do Sapucaí, MG.
-        </p>
+        <p className="mb-12 max-w-2xl text-lg text-muted-foreground">{t("contato.lead")}</p>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <a
-            href="mailto:seu-email@exemplo.com"
-            className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-primary/30"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-primary">
-              <Mail size={24} />
-            </div>
-            <div>
-              <h2 className="font-bold text-card-foreground">Email</h2>
-              <p className="text-sm text-muted-foreground group-hover:text-foreground">seu-email@exemplo.com</p>
-            </div>
-          </a>
-
-          <a
-            href="https://linkedin.com/in/SEU-PERFIL"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-primary/30"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-primary">
-              <Linkedin size={24} />
-            </div>
-            <div>
-              <h2 className="font-bold text-card-foreground">LinkedIn</h2>
-              <p className="text-sm text-muted-foreground group-hover:text-foreground">/in/seu-perfil</p>
-            </div>
-          </a>
-
-          <a
-            href="https://instagram.com/SEU-PERFIL"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-primary/30"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-primary">
-              <Instagram size={24} />
-            </div>
-            <div>
-              <h2 className="font-bold text-card-foreground">Instagram</h2>
-              <p className="text-sm text-muted-foreground group-hover:text-foreground">@seu-perfil</p>
-            </div>
-          </a>
-
-          <a
-            href="https://github.com/DonattoPieve"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-primary/30"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-primary">
-              <Github size={24} />
-            </div>
-            <div>
-              <h2 className="font-bold text-card-foreground">GitHub</h2>
-              <p className="text-sm text-muted-foreground group-hover:text-foreground">/DonattoPieve</p>
-            </div>
-          </a>
+          {canais.map((c) => (
+            <a
+              key={c.title}
+              href={c.href}
+              target={c.href.startsWith("mailto:") ? undefined : "_blank"}
+              rel={c.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+              className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-primary/30"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-primary">
+                {c.icon}
+              </div>
+              <div>
+                <h2 className="font-bold text-card-foreground">{c.title}</h2>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground">{c.sub}</p>
+              </div>
+            </a>
+          ))}
         </div>
       </section>
     </div>

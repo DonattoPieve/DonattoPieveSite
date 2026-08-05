@@ -12,6 +12,7 @@ import { Linkedin, Instagram, Mail, Github } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { ThemeControl } from "../components/ThemeControl";
+import { LangProvider, useLang, LangToggle } from "../lib/i18n";
 
 const themeInitScript = `(function(){var e=document.documentElement;var t='dark',p='purple';try{t=localStorage.getItem('dp-theme')||t;p=localStorage.getItem('dp-palette')||p;}catch(_){}e.setAttribute('data-theme',t);e.setAttribute('data-palette',p);})();`;
 
@@ -119,18 +120,20 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function Header() {
+  const { t } = useLang();
   return (
     <header className="fixed left-0 right-0 top-0 z-50 flex items-center justify-center px-4 py-6">
       <nav className="flex items-center gap-1 rounded-full border border-border bg-background/80 px-3 py-2 backdrop-blur-xl">
-        <NavLink to="/">Início</NavLink>
-        <NavLink to="/sobre">Sobre mim</NavLink>
-        <NavLink to="/projetos">Projetos</NavLink>
-        <NavLink to="/contato">Contato</NavLink>
+        <NavLink to="/">{t("nav.inicio")}</NavLink>
+        <NavLink to="/sobre">{t("nav.sobre")}</NavLink>
+        <NavLink to="/projetos">{t("nav.projetos")}</NavLink>
+        <NavLink to="/contato">{t("nav.contato")}</NavLink>
         <span className="mx-2 h-4 w-px bg-border" />
-        <SocialLink href="https://linkedin.com/in/SEU-PERFIL" label="LinkedIn" icon={<Linkedin size={16} />} />
-        <SocialLink href="https://instagram.com/SEU-PERFIL" label="Instagram" icon={<Instagram size={16} />} />
-        <SocialLink href="mailto:seu-email@exemplo.com" label="Email" icon={<Mail size={16} />} />
+        <SocialLink href="https://www.linkedin.com/in/donatto-pieve/" label="LinkedIn" icon={<Linkedin size={16} />} />
+        <SocialLink href="https://instagram.com/donatto0608" label="Instagram" icon={<Instagram size={16} />} />
+        <SocialLink href="mailto:donattocampos@outlook.com" label="Email" icon={<Mail size={16} />} />
         <span className="mx-1 h-4 w-px bg-border" />
+        <LangToggle />
         <ThemeControl />
       </nav>
     </header>
@@ -170,11 +173,11 @@ function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted-foreground md:flex-row">
         <p>© {new Date().getFullYear()} Donatto Pieve · donattopieve.com.br</p>
         <div className="flex items-center gap-4">
-          <a href="mailto:seu-email@exemplo.com" className="hover:text-foreground">seu-email@exemplo.com</a>
+          <a href="mailto:donattocampos@outlook.com" className="hover:text-foreground">donattocampos@outlook.com</a>
           <span className="hidden text-border md:inline">•</span>
           <div className="flex gap-2">
-            <SocialLink href="https://linkedin.com/in/SEU-PERFIL" label="LinkedIn" icon={<Linkedin size={16} />} />
-            <SocialLink href="https://instagram.com/SEU-PERFIL" label="Instagram" icon={<Instagram size={16} />} />
+            <SocialLink href="https://www.linkedin.com/in/donatto-pieve/" label="LinkedIn" icon={<Linkedin size={16} />} />
+            <SocialLink href="https://instagram.com/donatto0608" label="Instagram" icon={<Instagram size={16} />} />
             <SocialLink href="https://github.com/DonattoPieve" label="GitHub" icon={<Github size={16} />} />
           </div>
         </div>
@@ -188,13 +191,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
-        <Header />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
+      <LangProvider>
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
+      </LangProvider>
     </QueryClientProvider>
   );
 }

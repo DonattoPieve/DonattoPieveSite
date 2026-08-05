@@ -50,8 +50,13 @@ src/
 - Preferência salva em `localStorage` (`dp-theme`, `dp-palette`) e aplicada
   antes de pintar (sem flash). Tudo deriva de um único matiz `--hue` em `styles.css`.
 
+## Idiomas (PT/EN)
+
+- Botão EN/PT no header troca o site inteiro de uma vez.
+- Camada de i18n em `src/lib/i18n.tsx` (contexto + dicionário PT/EN + hook `useLang`).
+- Escolha salva em `localStorage` (`dp-lang`). Padrão: PT.
+
 ## Pendências
 
-- Trocar os placeholders de contato (email, `/in/SEU-PERFIL`, `@seu-perfil`) e a foto do Sobre.
-- Toggle PT/EN (camada de i18n) — a implementar.
+- Adicionar a foto no Sobre (há um espaço reservado).
 - Deploy na Vercel + domínio `donattopieve.com.br`.
